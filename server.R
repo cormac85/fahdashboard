@@ -3,13 +3,21 @@ library(fahlogstats)
 library(dplyr)
 library(lubridate)
 library(stringr)
+library(shinydashboard)
 
-shiny_read_log <- function(file_path) {
+FAH_CLIENT_FOLDER_PATH <- file.path("~", "..", "AppData", "Roaming", "FAHClient")
 
-  log_df <- suppressMessages(tibble::tibble(message = scan(file_path,
-                                                           what = "character",
-                                                           sep = "\r",
-                                                           quiet = TRUE)))
+shiny_read_log <- function(log_file_path) {
+
+  log_df <- suppressMessages(
+    tibble::tibble(
+      message = scan(log_file_path,
+                     what = "character",
+                     sep = "\r",
+                     quiet = TRUE)
+      )
+    )
+  
   log_df <- dplyr::filter(log_df, !stringr::str_starts(message, "\\*"))
   
   log_start_date <-
@@ -28,15 +36,7 @@ shiny_read_log <- function(file_path) {
 
 function(input, output, session) {
   log_df <- reactive({
-    req(input$log_files)
-    
-    file_extension <- tools::file_ext(input$log_files$name)
-    switch(file_extension,
-           txt = shiny_read_log(input$log_files$datapath),
-           validate(
-             "Invalid file. Please supply a .txt log file from FAH Client"
-           )
-    )
+    shiny_read_log(file.path(FAH_CLIENT_FOLDER_PATH, "log.txt"))
   })
   
   work_unit_df <- reactive({
@@ -45,16 +45,17 @@ function(input, output, session) {
       fahlogstats::get_work_unit_data()
   })
   
-  
-  
-  output$logs_df <- renderTable({
-    head(work_unit_df())
-  })
-  
   output$credits_plot <- renderPlot({
     work_unit_df() %>% 
       get_credits() %>%
       plot_credits(all_slots = TRUE)
+  })
+  
+  output$network_plot <- renderPlot({
+    work_unit_df() %>% 
+      fahlogstats::get_network_usage() %>%
+      fahlogstats::calculate_daily_network_usage() %>% 
+      plot_cumulative_network_usage()
   })
   
 }
