@@ -45,9 +45,11 @@ shinydashboard::dashboardPage(
               )
       ),
       tabItem(tabName = "live",
-              shiny::h3("Under Construction!")
+              fluidRow(
+                uiOutput("time_range_box_live")
+              )
       )
     )
   )
-)
   
+)

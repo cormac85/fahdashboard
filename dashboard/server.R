@@ -104,10 +104,10 @@ function(input, output, session) {
   ###########
   source(file.path("components", "credits.R"), local = TRUE)
   
-  ###############
-  # Info Boxes #
-  ###############
-
+  ########
+  # Live #
+  ########
+  source(file.path("components", "live.R"), local = TRUE)
 
 
   
