@@ -170,7 +170,9 @@ function(input, output, session) {
             width = 12,
             icon = icon("calendar-alt"),
             subtitle = paste0(log_end_date - log_start_date,
-                              " days"))
+                              " days (read from ", 
+                              NUMBER_LOGS_READ + 1, 
+                              " most recent log files)"))
   })
   
   output$date_range_box_credits <- renderUI({
@@ -184,10 +186,13 @@ function(input, output, session) {
   ###############
   # Value Boxes #
   ###############
+  credits_formatter <- scales::label_number(accuracy = 0.1, scale = 1e-6, suffix = "M")
+  network_usage_formatter <- scales::label_number(accuracy = 0.1, scale = 1e-3)
+  
   output$total_credits_box <- renderUI({
     valueBox(
       subtitle = shiny::p("Total Credits"),
-      value = scales::comma(sum(credits_df()$credits_attributed)),
+      value = credits_formatter(sum(credits_df()$credits_attributed)),
       icon = icon(CREDITS_ICON),
       color = "light-blue",
       width = 3
@@ -196,7 +201,7 @@ function(input, output, session) {
   output$credits_per_day_box <- renderUI({
     valueBox(
       subtitle = shiny::p("Credits per Day"),
-      value = scales::comma(mean(credits_per_day()$credits_per_day)),
+      value = credits_formatter(mean(credits_per_day()$credits_per_day)),
       icon = icon(CREDITS_ICON),
       color = "aqua",
       width = 3
@@ -205,8 +210,8 @@ function(input, output, session) {
   
   output$total_network_usage_box <- renderUI({
     valueBox(
-      subtitle = shiny::p("Total Usage (MiB) "),
-      value = scales::comma(
+      subtitle = shiny::p("Total Usage (GiB) "),
+      value = network_usage_formatter(
         sum(total_daily_network_usage_df()$total_usage_mib)
         ),
       icon = icon(NETWORK_ICON),
@@ -216,8 +221,8 @@ function(input, output, session) {
   })
   output$network_usage_per_day_box <- renderUI({
     valueBox(
-      subtitle = shiny::p("Usage per Day (MiB)"),
-      value = scales::comma(
+      subtitle = shiny::p("Usage per Day (GB)"),
+      value = network_usage_formatter(
         mean(total_daily_network_usage_df()$total_usage_mib)
         ),
       icon = icon(NETWORK_ICON),
