@@ -2,9 +2,6 @@ library(shiny)
 library(shinydashboard)
 
 # Styling
-CREDITS_ICON = "award"
-NETWORK_ICON = "wifi"
-LIVE_ICON = "heartbeat"
 OVERVIEW_PLOT_WIDTH = 9
 OVERVIEW_PLOT_HEIGHT = 9
 

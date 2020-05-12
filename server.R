@@ -12,9 +12,6 @@ FAH_CLIENT_RECENT_LOGS_PATH <- file.path(FAH_CLIENT_FOLDER_PATH, "logs")
 FAH_CLIENT_LIVE_LOG_FILE_NAME <- "log.txt"
 NUMBER_LOGS_READ <- 8
 RENDER_PERIOD_MINUTES <- 5
-# Styling
-CREDITS_ICON = "award"
-NETWORK_ICON = "wifi"
 
 # Functions
 shiny_read_log <- function(log_file_path) {
@@ -187,7 +184,7 @@ function(input, output, session) {
   # Value Boxes #
   ###############
   credits_formatter <- scales::label_number(accuracy = 0.1, scale = 1e-6, suffix = "M")
-  network_usage_formatter <- scales::label_number(accuracy = 0.1, scale = 1e-3)
+  network_usage_formatter <- scales::label_number(accuracy = 0.1, scale = 1e-3, suffix = "GiB")
   
   output$total_credits_box <- renderUI({
     valueBox(
@@ -210,7 +207,7 @@ function(input, output, session) {
   
   output$total_network_usage_box <- renderUI({
     valueBox(
-      subtitle = shiny::p("Total Usage (GiB) "),
+      subtitle = shiny::p("Total Usage"),
       value = network_usage_formatter(
         sum(total_daily_network_usage_df()$total_usage_mib)
         ),
@@ -221,7 +218,7 @@ function(input, output, session) {
   })
   output$network_usage_per_day_box <- renderUI({
     valueBox(
-      subtitle = shiny::p("Usage per Day (GB)"),
+      subtitle = shiny::p("Usage per Day"),
       value = network_usage_formatter(
         mean(total_daily_network_usage_df()$total_usage_mib)
         ),
