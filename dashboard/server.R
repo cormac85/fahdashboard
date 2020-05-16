@@ -108,8 +108,6 @@ function(input, output, session) {
   # Live #
   ########
   source(file.path("components", "live.R"), local = TRUE)
-
-
   
 }
 

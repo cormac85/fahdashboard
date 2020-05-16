@@ -16,6 +16,7 @@ shinydashboard::dashboardPage(
     )
   ),
   shinydashboard::dashboardBody(
+    tags$head(tags$style(HTML(".small-box {height: 130px}"))),
     tabItems(
       tabItem(tabName = "credits",
               fluidRow(
@@ -47,9 +48,23 @@ shinydashboard::dashboardPage(
       tabItem(tabName = "live",
               fluidRow(
                 uiOutput("time_range_box_live")
+              ),
+              fluidRow(
+                shiny::column(
+                  uiOutput("folding_slot_boxes_rendered"),
+                  width = 3
+                ),
+                shiny::column(
+                  uiOutput("slot_name_boxes_rendered"),
+                  width = 3
+                ),
+                shiny::column(
+                  uiOutput("slot_progress_boxes_rendered"),
+                  width = 3
+                )
               )
       )
     )
   )
-  
 )
+
