@@ -1,11 +1,3 @@
-PROCESSOR_ICON = "microchip"
-FOLDING_ICON_FINISHED = "stop"
-FOLDING_ICON_RUNNING = "play"
-FOLDING_ICON_NOT_STARTED = "clock"
-FOLDING_ICON_ERROR = "exclamation"
-FOLDING_VALUE_BOX_HEIGHT = 200
-
-
 # Time Box
 live_time_range_box <- reactive({
   
@@ -151,6 +143,59 @@ output$folding_slot_boxes_rendered <- renderUI({
   req(folding_slot_boxes())
   
   purrr::iwalk(folding_slot_boxes(), ~{
+    output_name <- paste0("box_", .y)
+    output[[output_name]] <- renderUI(.x)
+  })
+})
+
+# Latest Work Unit Boxes
+live_credits_formatter <- scales::label_number(accuracy = 0.1, scale = 1e-3, suffix = "k")
+
+live_credits_df <- reactive({
+  global_timer()
+  
+  credits <-
+    work_unit_df() %>% 
+    dplyr::filter(log_file_name == "log.txt") %>% 
+    get_credits()
+  
+  credits
+})
+
+latest_credits_df <- reactive({
+  req(live_credits_df())
+  
+  live_credits_df() %>% 
+    dplyr::group_by(folding_slot) %>% 
+    dplyr::summarise(latest_credits = dplyr::last(credits_attributed)) %>% 
+    dplyr::arrange(folding_slot)
+  
+})
+
+latest_credits_boxes <- reactive({
+  req(latest_credits_df())
+  
+  latest_credits_df() %>% 
+    dplyr::mutate(latest_credits_value_box = purrr::map(
+      latest_credits,
+      function(latest_c) {
+        valueBox(
+          value = live_credits_formatter(latest_c),
+          color = "aqua",
+          width = 12,
+          subtitle = "Credits From Most Recent Work Unit",
+          icon = icon(CREDITS_ICON)
+        )
+      })) %>% 
+    pull(latest_credits_value_box)
+})
+
+
+output$latest_credits_boxes_rendered <- renderUI({
+  global_timer()
+  req(latest_credits_boxes())
+  
+  purrr::iwalk(latest_credits_boxes(), ~{
     output_name <- paste0("box_", .y)
     output[[output_name]] <- renderUI(.x)
   })

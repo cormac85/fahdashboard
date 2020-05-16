@@ -1,17 +1,17 @@
 library(shiny)
 library(shinydashboard)
 
-# Styling
-OVERVIEW_PLOT_WIDTH = 9
-OVERVIEW_PLOT_HEIGHT = 9
+source(file.path(".", "global.R"), local = TRUE)
+
 
 shinydashboard::dashboardPage(
   shinydashboard::dashboardHeader(title = "Folding@Home Live Stats"),
   shinydashboard::dashboardSidebar(
     sidebarMenu(
+      
+      menuItem("Live", tabName = "live",  icon = icon(LIVE_ICON)),
       menuItem("Credits", tabName = "credits", icon = icon(CREDITS_ICON)),
-      menuItem("Network", tabName = "network", icon = icon(NETWORK_ICON)),
-      menuItem("Live", tabName = "live",  icon = icon(LIVE_ICON))
+      menuItem("Network", tabName = "network", icon = icon(NETWORK_ICON))
     ),
     tags$head(tags$style(HTML(".fa-heartbeat {color: rgb(255, 0, 0)}")))
   ),
@@ -60,6 +60,10 @@ shinydashboard::dashboardPage(
                 ),
                 shiny::column(
                   uiOutput("slot_progress_boxes_rendered"),
+                  width = 3
+                ),
+                shiny::column(
+                  uiOutput("latest_credits_boxes_rendered"),
                   width = 3
                 )
               )

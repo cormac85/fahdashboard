@@ -6,12 +6,7 @@ library(stringr)
 library(shinydashboard)
 library(scales)
 
-# Logs
-FAH_CLIENT_FOLDER_PATH <- file.path("~", "..", "AppData", "Roaming", "FAHClient")
-FAH_CLIENT_RECENT_LOGS_PATH <- file.path(FAH_CLIENT_FOLDER_PATH, "logs")
-FAH_CLIENT_LIVE_LOG_FILE_NAME <- "log.txt"
-NUMBER_LOGS_READ <- 8
-RENDER_PERIOD_MINUTES <- 1
+source(file.path(".", "global.R"), local = TRUE)
 
 # Functions
 shiny_read_log <- function(log_file_path) {
