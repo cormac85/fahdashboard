@@ -11,9 +11,9 @@ shinydashboard::dashboardPage(
     sidebarMenu(
       menuItem("Credits", tabName = "credits", icon = icon(CREDITS_ICON)),
       menuItem("Network", tabName = "network", icon = icon(NETWORK_ICON)),
-      menuItem("Live", tabName = "live",  icon = icon(LIVE_ICON),
-               badgeLabel = "\U1F528", badgeColor = "yellow")
-    )
+      menuItem("Live", tabName = "live",  icon = icon(LIVE_ICON))
+    ),
+    tags$head(tags$style(HTML(".fa-heartbeat {color: rgb(255, 0, 0)}")))
   ),
   shinydashboard::dashboardBody(
     tags$head(tags$style(HTML(".small-box {height: 130px}"))),
