@@ -42,7 +42,7 @@ folding_slot_names_df <- reactive({
   core_progress <- fahlogstats::get_slot_progress(live_logs_clean)
   dplyr::select(core_progress, folding_slot, 
                 processor_name, processor_type, 
-                slot_progress)
+                slot_progress, progress_timestamp, work_start)
   
 })
 
@@ -81,28 +81,35 @@ output$slot_name_boxes_rendered <- renderUI({
 slot_progress_boxes <- reactive({
   req(folding_slot_names_df())
   
+  print(folding_slot_names_df())
+  print(folding_slot_names_df()$progress_timestamp - folding_slot_names_df()$work_start)
+  
   folding_slot_names_df() %>% 
-    dplyr::mutate(core_name_value_box = purrr::map(
-      slot_progress,
-      function(slot_p) {
-        valueBox(
-          value = scales::percent(slot_p / 100),
-          icon =   dplyr::case_when(
-            near(slot_p, 100) ~ list(icon(FOLDING_ICON_FINISHED)), 
-            slot_p < 100      ~ list(icon(FOLDING_ICON_RUNNING)),
-            is.na(slot_p)     ~ list(icon(FOLDING_ICON_NOT_STARTED)),
-            TRUE              ~ list(icon(FOLDING_ICON_ERROR))
-          )[[1]],
-          color = dplyr::case_when(
-            slot_p == 100 ~ "yellow", 
-            slot_p < 100 ~ "green",
-            is.na(slot_p) ~ "black",
-            TRUE ~ "red"
-          ),
-          width = 12,
-          subtitle = ""
-        )
-      })) %>% 
+    dplyr::mutate(
+      current_work_duration = difftime(progress_timestamp, 
+                                       work_start, units = "hours"),
+      current_work_duration = lubridate::as.period(current_work_duration),
+      core_name_value_box = purrr::map2(
+        slot_progress, current_work_duration,
+        function(slot_p, work_d) {
+          valueBox(
+            value = scales::percent(slot_p / 100),
+            icon =   dplyr::case_when(
+              near(slot_p, 100) ~ list(icon(FOLDING_ICON_FINISHED)), 
+              slot_p < 100      ~ list(icon(FOLDING_ICON_RUNNING)),
+              is.na(slot_p)     ~ list(icon(FOLDING_ICON_NOT_STARTED)),
+              TRUE              ~ list(icon(FOLDING_ICON_ERROR))
+            )[[1]],
+            color = dplyr::case_when(
+              slot_p == 100 ~ "yellow", 
+              slot_p < 100 ~ "green",
+              is.na(slot_p) ~ "black",
+              TRUE ~ "red"
+            ),
+            width = 12,
+            subtitle = work_d
+          )
+        })) %>% 
     pull(core_name_value_box)
 })
 
