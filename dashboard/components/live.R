@@ -43,11 +43,6 @@ folding_slot_names_df <- reactive({
   
 })
 
-output$folding_slot_table <- renderTable({
-  global_timer()
-  folding_slot_names_df()
-})
-
 
 # Slot Name Boxes
 slot_name_boxes <- reactive({
@@ -151,6 +146,7 @@ output$folding_slot_boxes_rendered <- renderUI({
 # Latest Work Unit Boxes
 live_credits_formatter <- scales::label_number(accuracy = 0.1, scale = 1e-3, suffix = "k")
 
+
 live_credits_df <- reactive({
   global_timer()
   
@@ -162,28 +158,28 @@ live_credits_df <- reactive({
   credits
 })
 
-latest_credits_df <- reactive({
-  req(live_credits_df())
+latest_work_df <- reactive({
+  global_timer()
   
-  live_credits_df() %>% 
-    dplyr::group_by(folding_slot) %>% 
-    dplyr::summarise(latest_credits = dplyr::last(credits_attributed)) %>% 
-    dplyr::arrange(folding_slot)
+  work_unit_df() %>% 
+    dplyr::filter(log_file_name == "log.txt") %>% 
+    get_latest_work_unit_details()
   
 })
 
 latest_credits_boxes <- reactive({
-  req(latest_credits_df())
+  req(latest_work_df())
   
-  latest_credits_df() %>% 
-    dplyr::mutate(latest_credits_value_box = purrr::map(
-      latest_credits,
-      function(latest_c) {
+  latest_work_df() %>% 
+    dplyr::mutate(latest_credits_value_box = purrr::map2(
+      latest_credits_attributed,latest_work_duration,
+      function(latest_c, latest_d) {
         valueBox(
           value = live_credits_formatter(latest_c),
           color = "aqua",
           width = 12,
-          subtitle = "Credits From Most Recent Work Unit",
+          subtitle = paste("Latest Work Duration: ", 
+                           lubridate::as.period(lubridate::dhours(latest_d))),
           icon = icon(CREDITS_ICON)
         )
       })) %>% 
