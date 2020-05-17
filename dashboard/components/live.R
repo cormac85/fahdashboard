@@ -13,15 +13,18 @@ live_time_range_box <- reactive({
     round() %>% 
     lubridate::seconds_to_period()
   
-  infoBox(title = "Live Log Time Range", 
-          value = paste0(
-            strftime(log_start_time, format = "%A %Y-%m-%d %H:%M:%S"),
-            " \U2192 ",
-            strftime(log_end_time, format = "%A %Y-%m-%d %H:%M:%S")
-          ),
-          width = 12,
-          icon = icon("clock"),
-          subtitle = log_period)
+  infoBox(
+    title = "Live Log Time Range", 
+    value = paste0(
+      strftime(log_start_time, format = "%A %Y-%m-%d %H:%M:%S"),
+      " \U2192 ",
+      strftime(log_end_time, format = "%A %Y-%m-%d %H:%M:%S")
+    ),
+    width = 12,
+    icon = icon("clock"),
+    subtitle = log_period,
+    fill = TRUE,
+    color = "black")
 })
 
 output$time_range_box_live <- renderUI({
@@ -178,8 +181,7 @@ latest_credits_boxes <- reactive({
           value = live_credits_formatter(latest_c),
           color = "aqua",
           width = 12,
-          subtitle = paste("Latest Work Duration: ", 
-                           lubridate::as.period(lubridate::dhours(latest_d))),
+          subtitle = lubridate::as.period(lubridate::dhours(latest_d)),
           icon = icon(CREDITS_ICON)
         )
       })) %>% 

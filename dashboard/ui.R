@@ -4,7 +4,7 @@ library(shinydashboard)
 source(file.path(".", "global.R"), local = TRUE)
 
 
-shinydashboard::dashboardPage(
+shinydashboard::dashboardPage(skin = "red",
   shinydashboard::dashboardHeader(title = "Folding@Home Live Stats"),
   shinydashboard::dashboardSidebar(
     sidebarMenu(
@@ -13,7 +13,7 @@ shinydashboard::dashboardPage(
       menuItem("Credits", tabName = "credits", icon = icon(CREDITS_ICON)),
       menuItem("Network", tabName = "network", icon = icon(NETWORK_ICON))
     ),
-    tags$head(tags$style(HTML(".fa-heartbeat {color: rgb(255, 0, 0)}")))
+    tags$head(tags$style(HTML(".fa-heartbeat {color: rgb(211, 55, 36)}")))
   ),
   shinydashboard::dashboardBody(
     tags$head(tags$style(HTML(".small-box {height: 130px}"))),
