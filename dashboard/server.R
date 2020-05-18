@@ -104,5 +104,10 @@ function(input, output, session) {
   ########
   source(file.path("components", "live.R"), local = TRUE)
   
+  ########
+  # Idle #
+  ########
+  source(file.path("components", "idle.R"), local = TRUE)
+  
 }
 

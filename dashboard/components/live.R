@@ -8,10 +8,10 @@ live_time_range_box <- reactive({
   log_start_time <- min(live_logs_clean$log_timestamp)
   log_end_time <- max(live_logs_clean$log_timestamp)
   log_period <- 
-    lubridate::as.period(log_end_time - log_start_time) %>% 
-    as.numeric() %>% 
-    round() %>% 
-    lubridate::seconds_to_period()
+    difftime(log_end_time, 
+             log_start_time, 
+             units = "hours") %>% 
+    difftime_to_period(seconds_in_unit = 1)
   
   infoBox(
     title = "Live Log Time Range", 
@@ -82,13 +82,13 @@ slot_progress_boxes <- reactive({
   req(folding_slot_names_df())
   
   print(folding_slot_names_df())
-  print(folding_slot_names_df()$progress_timestamp - folding_slot_names_df()$work_start)
   
   folding_slot_names_df() %>% 
     dplyr::mutate(
-      current_work_duration = difftime(progress_timestamp, 
-                                       work_start, units = "hours"),
-      current_work_duration = lubridate::as.period(current_work_duration),
+      current_work_duration = purrr::map(
+        difftime(progress_timestamp, work_start, unit = "hours"),
+        difftime_to_period,
+        seconds_in_unit = 3600),
       core_name_value_box = purrr::map2(
         slot_progress, current_work_duration,
         function(slot_p, work_d) {
@@ -124,7 +124,7 @@ output$slot_progress_boxes_rendered <- renderUI({
   })
 })
 
-# Slot Progress Boxes
+# Folding Slot Boxes
 folding_slot_boxes <- reactive({
   req(folding_slot_names_df())
   
@@ -180,18 +180,26 @@ latest_work_df <- reactive({
 latest_credits_boxes <- reactive({
   req(latest_work_df())
   
+  print(latest_work_df())
+  
   latest_work_df() %>% 
-    dplyr::mutate(latest_credits_value_box = purrr::map2(
-      latest_credits_attributed,latest_work_duration,
-      function(latest_c, latest_d) {
-        valueBox(
-          value = live_credits_formatter(latest_c),
-          color = "aqua",
-          width = 12,
-          subtitle = lubridate::as.period(lubridate::dhours(latest_d)),
-          icon = icon(CREDITS_ICON)
-        )
-      })) %>% 
+    dplyr::mutate(
+      latest_work_duration = purrr::map(
+        latest_work_duration,
+        difftime_to_period,
+        seconds_in_unit = 3600
+      ),
+      latest_credits_value_box = purrr::map2(
+        latest_credits_attributed, latest_work_duration,
+        function(latest_c, latest_d) {
+          valueBox(
+            value = live_credits_formatter(latest_c),
+            color = "aqua",
+            width = 12,
+            subtitle = latest_d,
+            icon = icon(CREDITS_ICON)
+          )
+        })) %>% 
     pull(latest_credits_value_box)
 })
 

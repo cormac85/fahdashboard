@@ -11,7 +11,8 @@ shinydashboard::dashboardPage(skin = "red",
       
       menuItem("Live", tabName = "live",  icon = icon(LIVE_ICON)),
       menuItem("Credits", tabName = "credits", icon = icon(CREDITS_ICON)),
-      menuItem("Network", tabName = "network", icon = icon(NETWORK_ICON))
+      menuItem("Network", tabName = "network", icon = icon(NETWORK_ICON)),
+      menuItem("Idle Time", tabName = "idle", icon = icon(IDLE_TIME_ICON))
     ),
     tags$head(tags$style(HTML(".fa-heartbeat {color: rgb(211, 55, 36)}")))
   ),
@@ -43,6 +44,14 @@ shinydashboard::dashboardPage(skin = "red",
                                     height = 700),
                 uiOutput("total_network_usage_box"),
                 uiOutput("network_usage_per_day_box")
+              )
+      ),
+      tabItem(tabName = "idle",
+              fluidRow(
+                uiOutput("date_range_box_idle")
+              ),
+              fluidRow(
+                shiny::tags$h1("Under Construction")
               )
       ),
       tabItem(tabName = "live",
