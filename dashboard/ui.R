@@ -51,7 +51,10 @@ shinydashboard::dashboardPage(skin = "red",
                 uiOutput("date_range_box_idle")
               ),
               fluidRow(
-                shiny::tags$h1("Under Construction")
+                shinydashboard::box(plotOutput("idle_plot"), 
+                                    width = OVERVIEW_PLOT_WIDTH,
+                                    title = "Idleness", status = "danger",
+                                    solidHeader = TRUE),
               )
       ),
       tabItem(tabName = "live",
