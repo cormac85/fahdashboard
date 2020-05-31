@@ -13,6 +13,9 @@ FOLDING_VALUE_BOX_HEIGHT = 200
 OVERVIEW_PLOT_WIDTH = 9
 OVERVIEW_PLOT_HEIGHT = 9
 
+BASE_PLOT_TEXT_SIZE <- 15  # For all plots
+BASE_PLOTLY_TEXT_SIZE <- 12  # For plotly plots
+
 # Logs
 FAH_CLIENT_FOLDER_PATH <- file.path("~", "..", "AppData", "Roaming", "FAHClient")
 FAH_CLIENT_RECENT_LOGS_PATH <- file.path(FAH_CLIENT_FOLDER_PATH, "logs")

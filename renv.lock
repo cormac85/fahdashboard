@@ -16,13 +16,6 @@
       "Repository": "CRAN",
       "Hash": "f4605d46264b35f53072fc9ee7ace15f"
     },
-    "Cairo": {
-      "Package": "Cairo",
-      "Version": "1.5-12",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "a44aec693253e4eb6c45d2fd789091a0"
-    },
     "MASS": {
       "Package": "MASS",
       "Version": "7.3-51.5",
@@ -154,12 +147,12 @@
       "Version": "0.0.0.9000",
       "Source": "GitHub",
       "RemoteType": "github",
+      "RemoteHost": "api.github.com",
       "RemoteUsername": "cormac85",
       "RemoteRepo": "fahlogstats",
       "RemoteRef": "master",
-      "RemoteSha": "0b54f9741a8a5923a20a452c8d1cab512ee5c646",
-      "RemoteHost": "api.github.com",
-      "Hash": "e5110c1575df38ff9f398fba702f68de"
+      "RemoteSha": "3a6f6104b474cd080f9c030032c023e5c9e667bf",
+      "Hash": "8d0cb0fbb20ae3a501a3476c68b7b8c9"
     },
     "fansi": {
       "Package": "fansi",
