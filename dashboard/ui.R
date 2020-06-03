@@ -5,7 +5,10 @@ source(file.path(".", "global.R"), local = TRUE)
 
 
 shinydashboard::dashboardPage(skin = "red",
-  shinydashboard::dashboardHeader(title = "Folding@Home Live Stats"),
+  shinydashboard::dashboardHeader(
+    title = "Folding@Home Live Stats",
+    dropdownMenuOutput("folding_slot_menu")
+    ),
   shinydashboard::dashboardSidebar(
     sidebarMenu(
       

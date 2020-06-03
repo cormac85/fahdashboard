@@ -1,3 +1,37 @@
+# Folding Slot Dropdown
+output$folding_slot_menu <- renderMenu({
+  global_timer()
+  
+  msgs <- apply(folding_slot_names_df(), 1, function(row) {
+    
+    progress_colour = ifelse(
+      (as.numeric(row[["slot_progress"]]) >= 0) & (as.numeric(row[["slot_progress"]]) < 100),
+      "green",
+      "yellow"
+    )
+    
+    progress_colour = ifelse(is.na(progress_colour), "red", progress_colour)
+    
+    taskItem(
+      text = tags$span(
+        tags$strong(row[["folding_slot"]]),
+        tags$p(row[["processor_name"]])
+      ),
+      value = row[["slot_progress"]],
+      color = progress_colour
+    )
+  })
+  
+  dropdownMenu(type = "tasks", 
+               .list = msgs,
+               headerText = tags$div( 
+                 tags$strong(nrow(folding_slot_names_df()), .noWS = "outside"),
+                 tags$span(" folding slots available", .noWS = "outside"),
+                 .noWS = "outside"
+               ))
+})
+
+
 # Time Box
 live_time_range_box <- reactive({
   
